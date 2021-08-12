@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { Errors, Roles, UserRequest } from '../common';
+import { Errors, Roles, UserRequest, validateRequest } from '../common';
 import userController from '../controllers/user.controller';
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -40,6 +40,7 @@ router.post('/register',
     body('phone').exists().isNumeric(),
     body('email').exists().isAlphanumeric(),
     body('password').exists().isAlphanumeric(),
+    validateRequest,
     async (req: UserRequest, res: Response) => {
         try {
             const { name, phone, email, password } = req.body;
