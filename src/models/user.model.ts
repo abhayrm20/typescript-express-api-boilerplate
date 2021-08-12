@@ -1,17 +1,19 @@
 import mongoose, { Schema } from "mongoose";
+import { Roles } from "../common";
 
 export interface UserAttrsWithoutId {
     name: string;
     phone: number;
-    email: string;
+    email?: string;
     password: string;
+    role?: Roles;
 };
 
 export interface UserAttrs extends UserAttrsWithoutId {
     id: string;
 };
 
-export interface UserDoc extends mongoose.Document, UserAttrsWithoutId { };
+export interface UserDoc extends mongoose.Document, UserAttrs { };
 
 export interface UserModel extends mongoose.Model<UserDoc> {
     build(user: UserAttrsWithoutId): UserDoc;
@@ -29,13 +31,19 @@ const userSchema = new Schema(
         },
         email: {
             type: String,
-            required: true,
+            required: false,
             unique: true,
         },
         password: {
             type: String,
             required: true,
         },
+        role: {
+            type: String,
+            required: false,
+            default: Roles.User,
+            enum: Roles,
+        }
     },
     {
         timestamps: true,
